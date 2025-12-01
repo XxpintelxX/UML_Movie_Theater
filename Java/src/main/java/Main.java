@@ -5,30 +5,41 @@ public class Main {
 
         // CREATING MOVIE
         ArrayList<Movie> listMovies = new ArrayList<Movie>();
-        Movie movie = new Movie(
-                1,
-                "Alice in Wonderland",
-                new Time(0, 48, 1),
-                "Adventure, Fantastic, Young",
-                5.2,
-                "Alice, now 19 years old, returns to the whimsical world she first entered as a child and embarks on a journey to discover her true destiny.",
-                new ArrayList<Show>());
 
-        Movie movie1 = new Movie(
-                2,
-                "Arrival",
-                new Time(0, 56, 1),
-                "Science-Fiction, Thriller",
-                7.6,
-                "Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.",
-                new ArrayList<Show>());
+        Movie movie = new Movie.MovieBuilder("Alice in Wonderland")
+                .duration(new Time(0, 48, 1))
+                .genre("Adventure, Fantastic, Young")
+                .rating(5.2)
+                .description("Alice, now 19 years old, returns to the whimsical world she first entered as a child and embarks on a journey to discover her true destiny.")
+                .build();
+
+        Movie movie1 = new Movie.MovieBuilder("Arrival")
+                .duration(new Time(0, 56, 1))
+                .genre("Science Fiction, Thriller")
+                .rating(7.6)
+                .description("Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.")
+                .build();
 
         listMovies.add(movie);
         listMovies.add(movie1);
 
         // ADDING SHOW TO MOVIE
-        Show s = new Show(1, new Date(2025, 11, 30), movie.getDuration(), new Time(0, 30, 11), 11.5, new Hall(3, "Georges Lucas", 145), new ArrayList<Booking>());
-        Show s1 = new Show(2, new Date(2025, 12, 5), movie1.getDuration(), new Time(0, 45, 9), 11.5, new Hall(1, "Steven Spielberg", 100), new ArrayList<Booking>());
+        Show s = new Show.ShowBuilder()
+                .date(new Date(2025, 11, 30))
+                .duration(movie.getDuration())
+                .startTime(new Time(0, 30, 11))
+                .hall(new Hall(3, "Georges Lucas", 145))
+                .listBookings(new ArrayList<Booking>())
+                .build();
+
+        Show s1 = new Show.ShowBuilder()
+                .date(new Date(2025, 12, 5))
+                .duration(movie1.getDuration())
+                .startTime(new Time(0, 45, 9))
+                .hall(new Hall(1, "Steven Spielberg", 100))
+                .listBookings(new ArrayList<Booking>())
+                .build();
+
         movie.addShow(s);
         movie1.addShow(s1);
 
@@ -48,11 +59,182 @@ public class Main {
         displayMovies(listMovies);
         System.out.println();
 
+
+        String input = "";
+        Scanner scanner = new Scanner(System.in);
+        while (!input.equals("3")) {
+            System.out.println("1- Display movies");
+            System.out.println("2- Add Movie");
+            System.out.println("3- Exit\n");
+            input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    displayMovies(listMovies);
+                    break;
+                case "2":
+                    addMovie(listMovies);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public static void displayMovies(ArrayList<Movie> listMovies) {
         for (Movie m : listMovies) {
             System.out.println(m);
         }
+    }
+
+    public static void addMovie(ArrayList<Movie> listMovies) {
+        Scanner s = new Scanner(System.in);
+
+        int seconds, minutes, hours;
+
+        System.out.println("Enter movie name : ");
+        Movie.MovieBuilder mvb = new Movie.MovieBuilder(s.nextLine());
+
+        System.out.println("Do you have a duration ? (y/n)");
+        if (s.nextLine().equals("y")) {
+
+            System.out.println("Enter number of seconds : ");
+            seconds = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter number of minutes : ");
+            minutes = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter number of hours : ");
+            hours = s.nextInt();
+
+            s.nextLine();
+            mvb.duration(new Time(seconds, minutes, hours));
+        }
+        System.out.println("Do you have a genre(s) ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            System.out.println("Enter genre(s) as this \"Genre1, Genre2, Genre3, ...\" : ");
+            mvb.genre(s.nextLine());
+        }
+        System.out.println("Do you have a rating ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            System.out.println("Enter rating : ");
+            mvb.rating(s.nextDouble());
+
+            s.nextLine();
+        }
+        System.out.println("Do you have a description ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            System.out.println("Enter the description : ");
+            mvb.description(s.nextLine());
+        }
+
+        System.out.println("Do you want to add a show(s) ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            mvb.listShows(addShows());
+        }
+
+        Movie movie = mvb.build();
+        listMovies.add(movie);
+    }
+
+    public static ArrayList<Show> addShows() {
+        ArrayList<Show> listShows = new ArrayList<Show>();
+        Scanner s = new Scanner(System.in);
+        System.out.println("How many shows do you want to add ?");
+        int nbShows = s.nextInt();
+        s.nextLine();
+
+        for (int i = 0; i < nbShows; i++) {
+            System.out.println("Show #" + (i+1) + " : ");
+            listShows.add(createShow());
+        }
+        return listShows;
+    }
+
+    public static Show createShow() {
+        Scanner s = new Scanner(System.in);
+
+        Show.ShowBuilder sb = new Show.ShowBuilder();
+
+        System.out.println("Do you have a date ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            int year, month, day;
+            System.out.println("Enter year : ");
+            year = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter month : ");
+            month = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter day : ");
+            day = s.nextInt();
+
+            s.nextLine();
+            sb.date(new Date(year, month, day));
+        }
+
+        System.out.println("Do you have a duration ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            int seconds, minutes, hours;
+            System.out.println("Enter number of seconds : ");
+            seconds = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter number of minutes : ");
+            minutes = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter number of hours : ");
+            hours = s.nextInt();
+
+            s.nextLine();
+            sb.duration(new Time(seconds, minutes, hours));
+        }
+
+        System.out.println("Do you have a start time ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            int seconds, minutes, hours;
+            System.out.println("Enter seconds of start time : ");
+            seconds = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter minutes of start time : ");
+            minutes = s.nextInt();
+
+            s.nextLine();
+            System.out.println("Enter hours of start time : ");
+            hours = s.nextInt();
+
+            s.nextLine();
+            sb.startTime(new Time(seconds, minutes, hours));
+        }
+
+        System.out.println("Do you have a price ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            System.out.println("Enter price : ");
+            sb.price(s.nextDouble());
+
+            s.nextLine();
+        }
+        System.out.println("Do you have a hall ? (y/n)");
+        if (s.nextLine().equals("y")) {
+            int hallID;
+            String hallName;
+            int nbSeats;
+            System.out.println("Enter the hall ID : ");
+            hallID = s.nextInt();
+            s.nextLine();
+            System.out.println("Enter hall Name : ");
+            hallName = s.nextLine();
+            System.out.println("Enter number of seats : ");
+            nbSeats = s.nextInt();
+            s.nextLine();
+            sb.hall(new Hall(hallID, hallName, nbSeats));
+        }
+
+        Show show = sb.build();
+        return show;
     }
 }

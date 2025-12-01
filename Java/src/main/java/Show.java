@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Show {
     private int showID;
+    private int showIDCounter;
     private Date date;
     private Time duration;
     private Time startTime;
@@ -9,16 +10,61 @@ public class Show {
     private Hall hall;
     private ArrayList<Booking> listBookings;
 
-    public Show() {}
+    public Show(ShowBuilder builder) {
+        showIDCounter++;
+        this.showID = showIDCounter;
+        this.date = builder.date;
+        this.duration = builder.duration;
+        this.startTime = builder.startTime;
+        this.price = builder.price;
+        this.hall = builder.hall;
+        this.listBookings = builder.listBookings;
+    }
 
-    public Show(int showID, Date date, Time duration, Time startTime, double price, Hall hall, ArrayList<Booking> listBookings) {
-        this.showID = showID;
-        this.date = date;
-        this.duration = duration;
-        this.startTime = startTime;
-        this.price = price;
-        this.hall = hall;
-        this.listBookings = listBookings;
+    public static class ShowBuilder {
+
+        private Date date = null;
+        private Time duration = null;
+        private Time startTime = null;
+        private double price = 0.0;
+        private Hall hall = null;
+        private ArrayList<Booking> listBookings = new ArrayList<Booking>();
+
+        public ShowBuilder() {}
+
+        public ShowBuilder date(Date date) {
+            this.date = date;
+            return this;
+        }
+
+        public ShowBuilder duration(Time duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public ShowBuilder startTime(Time startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public ShowBuilder price(double price) {
+            this.price = price;
+            return this;
+        }
+
+        public ShowBuilder hall(Hall hall) {
+            this.hall = hall;
+            return this;
+        }
+
+        public ShowBuilder listBookings(ArrayList<Booking> listBookings) {
+            this.listBookings = listBookings;
+            return this;
+        }
+
+        public Show build() {
+            return new Show(this);
+        }
     }
 
     public int getShowID() {

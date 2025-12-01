@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Movie {
     private int movieID;
+    private static int movieIDCounter = 0;
     private String title;
     private Time duration;
     private String genre;
@@ -9,17 +10,58 @@ public class Movie {
     private String description;
     private ArrayList<Show> listShows;
 
+    public Movie(MovieBuilder builder) {
+        movieIDCounter++;
+        this.movieID = movieIDCounter;
+        this.title = builder.title;
+        this.duration = builder.duration;
+        this.genre = builder.genre;
+        this.rating = builder.rating;
+        this.description = builder.description;
+        this.listShows = builder.listShows != null ? builder.listShows : new ArrayList<>();
+    }
 
-    public Movie() {}
+    public static class MovieBuilder {
+        private final String title;
 
-    public Movie(int movieID, String title, Time duration, String genre, double rating, String description, ArrayList<Show> listShows) {
-        this.movieID = movieID;
-        this.title = title;
-        this.duration = duration;
-        this.genre = genre;
-        this.rating = rating;
-        this.description = description;
-        this.listShows = listShows;
+        private Time duration = null;
+        private String genre = null;
+        private double rating = 0.0;
+        private String description = null;
+        private ArrayList<Show> listShows = null;
+
+        public MovieBuilder(String title) {
+            this.title = title;
+        }
+
+        public MovieBuilder duration(Time duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public MovieBuilder genre(String genre) {
+            this.genre = genre;
+            return this;
+        }
+
+        public MovieBuilder rating(double rating) {
+            this.rating = rating;
+            return this;
+        }
+
+        public MovieBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public MovieBuilder listShows(ArrayList<Show> listShows) {
+            this.listShows = listShows;
+            return this;
+        }
+
+        public Movie build() {
+            return new Movie(this);
+        }
     }
 
     public int getMovieID() {
