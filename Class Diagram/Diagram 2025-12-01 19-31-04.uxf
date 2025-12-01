@@ -1,0 +1,89 @@
+<diagram program="umletino" version="15.1"><zoom_level>7</zoom_level><element><id>UMLClass</id><coordinates><x>42</x><y>8</y><w>245</w><h>210</h></coordinates><panel_attributes>Movie
+--
+-movieId : int
+-title : String
+-duration : int
+-genre : String
+-rating : double
+-description : String
+-listShows : ArrayList&lt;Show&gt;
+--
++&lt;&lt;constructor&gt;&gt;Movie()
++&lt;&lt;constructor&gt;&gt;Movie(movieId : int, title : String, duration :
+int, genre : String, rating : double,
+description : String, listShows : ArrayList&lt;Show&gt;)
++addListShows(show : Show) : void
++toString() : String
++addShow(s : Show) : void
++displayShows() : String
++addBooking(b : Booking, s : Show) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>42</x><y>267</y><w>224</w><h>189</h></coordinates><panel_attributes>Show
+--
+-showID : int
+-date : Date
+-duration : Time
+-startTime : Time
+-price : double
+-hall : Hall
+-listBookings : ArrayList&lt;Booking&gt;
+--
++&lt;&lt;constructor&gt;&gt;Show()
++&lt;&lt;constructor&gt;&gt;Show(date : Date, duration : Time,
+startTime : Time, price : double, hall : Hall)
++addListBookings(booking : Booking) : void
++toString() : String
++addBooking(b : Booking) : void
++displayBookings() : String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>392</x><y>176</y><w>210</w><h>126</h></coordinates><panel_attributes>Date
+--
+-year : int
+-month : int
+-day : int
+--
++&lt;&lt;constructor&gt;&gt;Date()
++&lt;&lt;constructor&gt;&gt;Date(year : int, month : int, day : int)
++toString() : String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>42</x><y>498</y><w>161</w><h>112</h></coordinates><panel_attributes>Time
+--
+-seconds : int
+-minutes : int
+-hours : int
+--
++&lt;&lt;constructor&gt;&gt;Time()
++&lt;&lt;constructor&gt;&gt;Time(seconds : int,
+minutes : int, hours : int)
++toString() : String</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>63</x><y>449</y><w>21</w><h>63</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>112</x><y>211</y><w>21</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>UMLClass</id><coordinates><x>343</x><y>15</y><w>259</w><h>119</h></coordinates><panel_attributes>Hall
+--
+-hallID : int
+-hallName : String
+-nbSeats : int
+--
++&lt;&lt;constructor&gt;&gt;Hall()
++&lt;&lt;constructor&gt;&gt;Hall(hallID : int, hallName : String, nbSeats : int)
++toString() : String</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>259</x><y>127</y><w>119</w><h>168</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;220;150;220;150;10</additional_attributes></element><element><id>Relation</id><coordinates><x>259</x><y>295</y><w>168</w><h>49</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;50;220;50;220;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>357</x><y>358</y><w>259</w><h>112</h></coordinates><panel_attributes>Booking
+--
+-bookingId : int
+-date : Date
+-customer : Customer
+-status : Status
+--
++&lt;&lt;constructor&gt;&gt;Booking()
++&lt;&lt;constructor&gt;&gt;Booking(bookingId : int, date : Date, customer :
+Customer, status : Status)
++toString() : String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>280</x><y>512</y><w>168</w><h>70</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt;
+Status
+--
+RESERVED
+PAID
+CANCELLED</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>371</x><y>463</y><w>21</w><h>63</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>259</x><y>365</y><w>112</w><h>21</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;140;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>483</x><y>512</y><w>189</w><h>140</h></coordinates><panel_attributes>Customer
+--
+-customerID : int
+-name : String
+-surName : String
+-email : String
+-phone : String
+--
++&lt;&lt;constructor&gt;&gt;Customer()
++&lt;&lt;constructor&gt;&gt;Customer(customerID : int,
+name : String, surName :
+String, email : String, phone : String)
++toString() : String</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>525</x><y>463</y><w>35</w><h>63</h></coordinates><panel_attributes>lt=&lt;-
+m1=0..n
+m2=1</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element></diagram>
