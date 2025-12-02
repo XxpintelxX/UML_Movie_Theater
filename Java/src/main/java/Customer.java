@@ -1,20 +1,24 @@
 public class Customer {
     private int customerID;
+    private static int customerIDCounter;
     private String name;
     private String surName;
     private String email;
     private String phone;
     private String password;
+    private double balance;
 
     public Customer() {}
 
-    public Customer(int customerID, String name, String surName, String email, String phone, String password) {
-        this.customerID = customerID;
+    public Customer(String name, String surName, String email, String phone, String password, double balance) {
+        customerIDCounter++;
+        this.customerID = customerIDCounter;
         this.name = name;
         this.surName = surName;
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.balance = balance;
     }
 
     public int getCustomerID() {
@@ -65,6 +69,14 @@ public class Customer {
         this.password = password;
     }
 
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -74,5 +86,17 @@ public class Customer {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 '}';
+    }
+
+    public boolean canPay(double price) {
+        boolean isAbleToPay = false;
+        if (price <= balance)
+            isAbleToPay = true;
+
+        return isAbleToPay;
+    }
+
+    public void paying(double price) {
+        balance -= price;
     }
 }

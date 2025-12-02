@@ -47,12 +47,33 @@ public class Manager {
                         if (b.getCustomer().equals(customer)) {
                             canReserve = false;
                         }
+                        if (s.getHall() != null) {
+                            if (b.getBookingIDCounter() >= s.getHall().getNbSeats()) {
+                                canReserve = false;
+                            }
+                        }
                     }
                 }
             }
         }
 
         return canReserve;
+    }
+
+    public boolean checkCustomerCanPay(Customer customer, int bookingId) {
+        boolean canPay = false;
+
+        for (Movie m : listMovies) {
+            for (Show s : m.getListShows()) {
+                for (Booking b : s.getListBookings()) {
+                    if ((b.getCustomer().equals(customer)) && (b.getStatus().equals(Status.RESERVED))) {
+                        canPay = true;
+                    }
+                }
+            }
+        }
+
+        return canPay;
     }
 
     public void addBooking(Customer customer, int showID) {
@@ -64,4 +85,21 @@ public class Manager {
             }
         }
     }
+
+    public void customerPays(Customer customer, int bookingID) {
+        for (Movie m : listMovies) {
+            for (Show s : m.getListShows()) {
+                for (Booking b : s.getListBookings()) {
+                    if ((b.getCustomer().equals(customer)) && (b.getStatus().equals(Status.RESERVED))) {
+                        if (customer.canPay(s.getPrice())) {
+                            customer.paying(s.getPrice());
+                            b.setStatus(Status.PAID);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
+

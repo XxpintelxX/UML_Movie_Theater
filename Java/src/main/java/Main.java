@@ -50,11 +50,11 @@ public class Main {
         movie1.addShow(s1);
 
         // ADDING BOOKING TO SHOW
-        Customer c = new Customer(0, "Yrieix", "de Salaberry", "yrieix@gmail.com", "0607080910", "T-REX123");
+        Customer c = new Customer("Yrieix", "de Salaberry", "yrieix@gmail.com", "0607080910", "T-REX123", 13.0);
         Booking b = new Booking(s.getDate(), c, Status.RESERVED);
         movie.addBooking(b, s);
 
-        Customer c1 = new Customer(1, "Mattéo", "Cousinard", "matteo@gmail.com", "0710136790", "JAVAGENIUS");
+        Customer c1 = new Customer("Mattéo", "Cousinard", "matteo@gmail.com", "0710136790", "JAVAGENIUS", 4.0);
         Booking b1 = new Booking(s.getDate(), c1, Status.PAID);
         Booking b2 = new Booking(s1.getDate(), c1, Status.RESERVED);
         movie.addBooking(b1, s);
@@ -78,7 +78,8 @@ public class Main {
             System.out.println("1- Display movies");
             System.out.println("2- Add Movie");
             System.out.println("3- Enter Show as");
-            System.out.println("4- Reserve Show as\n");
+            System.out.println("4- Reserve Show as");
+            System.out.println("5- Pay a booking\n");
             input = scanner.nextLine();
             switch (input) {
                 case "1":
@@ -102,10 +103,75 @@ public class Main {
                     System.out.println("Enter your email :");
                     String reservingEmail = scanner.nextLine();
                     manager.setListMovies(addBooking(manager.getListMovies(), reservingEmail, listCustomers));
+                case "5":
+                    System.out.println("Enter your email : ");
+                    String payingEmail = scanner.nextLine();
+                    if (pay(payingEmail, listCustomers)) {
+
+                    }
                 default:
                     break;
             }
         }
+    }
+
+    public static boolean pay(String email, ArrayList<Customer> listCustomers) {
+        // INITIALIZING NEEDED VARIABLES
+        boolean foundCustomer = false;
+        boolean payed = false;
+        Customer customer = null;
+        Manager manager = Manager.getInstance();
+
+        // FINDING CUSTOMER WITH CORRESPONDING EMAIL
+        for (Customer c : listCustomers) {
+            if (c.getEmail().equals(email)) {
+                foundCustomer = true;
+                customer = c;
+            }
+        }
+
+        // HANDLING CASE IF EMAIL DOES NOT CORRESPOND TO ANY EXISTING CUSTOMER
+        if (!foundCustomer) {
+            System.out.println("There is no customer with such email.");
+            return payed;
+        }
+
+        // ASKING USER TO CONNECT
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your password (you have 3 tries) :");
+        String pwdEntered = "";
+        int i = 0;
+        pwdEntered = scanner.nextLine();
+        while ((i < 3) && !pwdEntered.equals(customer.getPassword())) {
+            System.out.println("Wrong password, try again. You still got " + (3-(i+1)) + " tries");
+            pwdEntered = scanner.nextLine();
+            i++;
+        }
+
+        // HANDLING 3 WRONG PASSWORDS
+        if (i >= 3) {
+            System.out.println("You entered a wrong password 3 times.");
+            return payed;
+        }
+
+        // SEEING WHICH BOOKING DOES THE CUSTOMER WANT TO PAY
+        System.out.println("Which booking do you want to pay ? (\"0\" to display the list of movies and shows) : ");
+        int input = scanner.nextInt();
+        while ((input <= 0) || (Booking.getBookingIDCounter() < input)) {
+            if (input == 0) {
+                displayMovies(manager.getListMovies());
+            }
+            System.out.println("Enter a number between 0 and " + Booking.getBookingIDCounter() + " : ");
+            scanner.nextLine();
+            input = scanner.nextInt();
+        }
+
+        // CHECKING IF CUSTOMER CAN PAY SHOW
+        if (manager.checkCustomerCanPay(customer, input)) {
+            manager.customerPays(customer, input);
+        }
+
+        return payed;
     }
 
     public static ArrayList<Movie> addBooking(ArrayList<Movie> listMovies, String email, ArrayList<Customer> listCustomers) {
