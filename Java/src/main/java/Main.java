@@ -4,7 +4,9 @@ public class Main {
     public static void main(String[] args) {
 
         // CREATING MOVIE
-        ArrayList<Movie> listMovies = new ArrayList<Movie>();
+//        ArrayList<Movie> listMovies = new ArrayList<Movie>();
+        Manager manager = Manager.getInstance();
+//        manager.setListMovies(listMovies);
 
         Movie movie = new Movie.MovieBuilder("Alice in Wonderland")
                 .duration(new Time(0, 48, 1))
@@ -20,8 +22,11 @@ public class Main {
                 .description("Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.")
                 .build();
 
-        listMovies.add(movie);
-        listMovies.add(movie1);
+//        listMovies.add(movie);
+//        listMovies.add(movie1);
+        manager.addListMovies(movie);
+        manager.addListMovies(movie1);
+
 
         // ADDING SHOW TO MOVIE
         Show s = new Show.ShowBuilder()
@@ -41,43 +46,188 @@ public class Main {
                 .build();
 
         movie.addShow(s);
+
         movie1.addShow(s1);
 
         // ADDING BOOKING TO SHOW
-        Customer c = new Customer(0, "Yrieix", "de Salaberry", "yrieix@gmail.com", "0607080910");
-        Booking b = new Booking(1, s.getDate(), c, Status.RESERVED);
+        Customer c = new Customer(0, "Yrieix", "de Salaberry", "yrieix@gmail.com", "0607080910", "T-REX123");
+        Booking b = new Booking(s.getDate(), c, Status.RESERVED);
         movie.addBooking(b, s);
 
-        Customer c1 = new Customer(1, "Mattéo", "Cousinard", "mattéo@gmail.com", "0710136790");
-        Booking b1 = new Booking(2, s.getDate(), c1, Status.PAID);
-        Booking b2 = new Booking(3, s1.getDate(), c1, Status.RESERVED);
+        Customer c1 = new Customer(1, "Mattéo", "Cousinard", "matteo@gmail.com", "0710136790", "JAVAGENIUS");
+        Booking b1 = new Booking(s.getDate(), c1, Status.PAID);
+        Booking b2 = new Booking(s1.getDate(), c1, Status.RESERVED);
         movie.addBooking(b1, s);
         movie1.addBooking(b2, s1);
 
+        // CREATING AND ADDING CUSTOMERS TO THE LIST OF CUSTOMERS
+        ArrayList<Customer> listCustomers = new ArrayList<Customer>();
+        listCustomers.add(c);
+        listCustomers.add(c1);
+
         // PRINTING THE LIST OF MOVIES WITH ALL THE INFORMATION OF EACH MOVIE
         System.out.println("===== LIST OF MOVIES =====");
-        displayMovies(listMovies);
+        displayMovies(manager.getListMovies());
         System.out.println();
 
-
+        // LOOP FOR CONSOLE INTERFACE
         String input = "";
         Scanner scanner = new Scanner(System.in);
-        while (!input.equals("3")) {
+        while (!input.equals("0")) {
+            System.out.println("0- Exit");
             System.out.println("1- Display movies");
             System.out.println("2- Add Movie");
-            System.out.println("3- Exit\n");
+            System.out.println("3- Enter Show as");
+            System.out.println("4- Reserve Show as\n");
             input = scanner.nextLine();
             switch (input) {
                 case "1":
-                    displayMovies(listMovies);
+                    displayMovies(manager.getListMovies());
                     break;
                 case "2":
-                    addMovie(listMovies);
+                    addMovie(manager.getListMovies());
                     break;
+                case "3":
+                    System.out.println("Enter your email :");
+                    String checkingEmail = scanner.nextLine();
+
+                    boolean isAllowed = enterShow(checkingEmail, listCustomers, manager.getListMovies());
+                    if (isAllowed) {
+                        System.out.println("You are allowed to enter.");
+                    } else {
+                        System.out.println("You are not allowed to enter");
+                    }
+                    break;
+                case "4":
+                    System.out.println("Enter your email :");
+                    String reservingEmail = scanner.nextLine();
+                    manager.setListMovies(addBooking(manager.getListMovies(), reservingEmail, listCustomers));
                 default:
                     break;
             }
         }
+    }
+
+    public static ArrayList<Movie> addBooking(ArrayList<Movie> listMovies, String email, ArrayList<Customer> listCustomers) {
+        // INITIALIZING NEEDED VARIABLES
+        boolean foundCustomer = false;
+        Customer customer = null;
+        Manager manager = Manager.getInstance();
+
+        // FINDING CUSTOMER WITH CORRESPONDING EMAIL
+        for (Customer c : listCustomers) {
+            if (c.getEmail().equals(email)) {
+                foundCustomer = true;
+                customer = c;
+            }
+        }
+
+        // HANDLING CASE IF EMAIL DOES NOT CORRESPOND TO ANY EXISTING CUSTOMER
+        if (!foundCustomer) {
+            System.out.println("There is no customer with such email.");
+            return listMovies;
+        }
+
+        // ASKING USER TO CONNECT
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your password (you have 3 tries) :");
+        String pwdEntered = "";
+        int i = 0;
+        pwdEntered = scanner.nextLine();
+        while ((i < 3) && !pwdEntered.equals(customer.getPassword())) {
+            System.out.println("Wrong password, try again. You still got " + (3-(i+1)) + " tries");
+            pwdEntered = scanner.nextLine();
+            i++;
+        }
+
+        // HANDLING 3 WRONG PASSWORDS
+        if (i >= 3) {
+            System.out.println("You entered a wrong password 3 times.");
+            return listMovies;
+        }
+
+        // SEEING WHICH SHOW DOES THE CUSTOMER WANT TO RESERVE
+        System.out.println("Which show do you want to reserve ? (\"0\" to display the list of movies and shows) : ");
+        int input = scanner.nextInt();
+        while ((input <= 0) || (Show.getShowIDCounter() < input)) {
+            if (input == 0) {
+                displayMovies(listMovies);
+            }
+            System.out.println("Enter a number between 0 and " + Show.getShowIDCounter() + " : ");
+            scanner.nextLine();
+            input = scanner.nextInt();
+        }
+
+        // CHECKING IF CUSTOMER CAN RESERVE SHOW
+        if (manager.checkCustomerCanReserve(customer, input)) {
+            manager.addBooking(customer, input);
+        }
+
+
+        return listMovies;
+    }
+
+    public static boolean enterShow(String email, ArrayList<Customer> listCustomers, ArrayList<Movie> listMovies) {
+        // INITIALIZING NEEDED VARIABLES
+        boolean isAllowed = false;
+        boolean foundCustomer = false;
+        Customer customer = null;
+
+        // FINDING CUSTOMER WITH CORRESPONDING EMAIL
+        for (Customer c : listCustomers) {
+            if (c.getEmail().equals(email)) {
+                foundCustomer = true;
+                customer = c;
+            }
+        }
+
+        // HANDLING CASE IF EMAIL DOES NOT CORRESPOND TO ANY EXISTING CUSTOMER
+        if (!foundCustomer) {
+            System.out.println("There is no customer with such email.");
+            return isAllowed;
+        }
+
+        // ASKING USER TO CONNECT
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your password (you have 3 tries) :");
+        String pwdEntered = "";
+        int i = 0;
+        pwdEntered = scanner.nextLine();
+        while ((i < 3) && !pwdEntered.equals(customer.getPassword())) {
+            System.out.println("Wrong password, try again. You still got " + (3-(i+1)) + " tries");
+            pwdEntered = scanner.nextLine();
+            i++;
+        }
+
+        // HANDLING 3 WRONG PASSWORDS
+        if (i >= 3) {
+            System.out.println("You entered a wrong password 3 times.");
+            return isAllowed;
+        }
+
+        // SEEING WHICH SHOW DOES THE CUSTOMER WANT TO ENTER
+        System.out.println("Which show do you want to enter ? (\"0\" to display the list of movies and shows) : ");
+        int input = scanner.nextInt();
+        while ((input <= 0) || (Show.getShowIDCounter() < input)) {
+            if (input == 0) {
+                displayMovies(listMovies);
+            }
+            System.out.println("Enter a number between 0 and " + Show.getShowIDCounter() + " : ");
+            scanner.nextLine();
+            input = scanner.nextInt();
+        }
+
+        // CHECKING IF CUSTOMER IS ALLOWED
+        for (Movie m : listMovies) {
+            for (Show s : m.getListShows()) {
+                if (s.getShowID() == input) {
+                    Manager manager = Manager.getInstance();
+                    isAllowed = manager.verifyEntry(customer, s);
+                }
+            }
+        }
+
+        return isAllowed;
     }
 
     public static void displayMovies(ArrayList<Movie> listMovies) {

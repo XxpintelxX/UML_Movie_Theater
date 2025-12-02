@@ -1,13 +1,15 @@
 public class Booking {
     private int bookingID;
+    private static int bookingIDCounter;
     private Date date;
     private Customer customer;
     private Status status;
 
     public Booking() {}
 
-    public Booking(int bookingID, Date date, Customer customer, Status status) {
-        this.bookingID = bookingID;
+    public Booking(Date date, Customer customer, Status status) {
+        bookingIDCounter++;
+        this.bookingID = bookingIDCounter;
         this.date = date;
         this.customer = customer;
         this.status = status;
@@ -19,6 +21,14 @@ public class Booking {
 
     public void setBookingID(int bookingID) {
         this.bookingID = bookingID;
+    }
+
+    public static int getBookingIDCounter() {
+        return bookingIDCounter;
+    }
+
+    public static void setBookingIDCounter(int bookingIDCounter) {
+        Booking.bookingIDCounter = bookingIDCounter;
     }
 
     public Date getDate() {

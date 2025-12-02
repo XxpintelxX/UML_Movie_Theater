@@ -4,15 +4,17 @@ public class Customer {
     private String surName;
     private String email;
     private String phone;
+    private String password;
 
     public Customer() {}
 
-    public Customer(int customerID, String name, String surName, String email, String phone) {
+    public Customer(int customerID, String name, String surName, String email, String phone, String password) {
         this.customerID = customerID;
         this.name = name;
         this.surName = surName;
         this.email = email;
         this.phone = phone;
+        this.password = password;
     }
 
     public int getCustomerID() {
@@ -55,6 +57,14 @@ public class Customer {
         this.phone = phone;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -65,5 +75,4 @@ public class Customer {
                 ", phone='" + phone + '\'' +
                 '}';
     }
-
 }

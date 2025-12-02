@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Show {
     private int showID;
-    private int showIDCounter;
+    private static int showIDCounter;
     private Date date;
     private Time duration;
     private Time startTime;
@@ -74,6 +74,8 @@ public class Show {
     public void setShowID(int showID) {
         this.showID = showID;
     }
+
+    public static int getShowIDCounter() {return showIDCounter;}
 
     public Date getDate() {
         return date;
