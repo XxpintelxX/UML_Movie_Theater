@@ -1,3 +1,5 @@
+package fr.efrei.domain;
+
 public class Time {
     private int seconds;
     private int minutes;

@@ -1,3 +1,5 @@
+package fr.efrei.domain;
+
 import java.util.*;
 
 public class Movie {

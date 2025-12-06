@@ -1,6 +1,12 @@
-public class Booking {
+package fr.efrei.domain;
+
+import fr.efrei.repository.BookingRepository;
+
+import java.awt.print.Book;
+
+public class Booking implements BookingRepository {
     private int bookingID;
-    private static int bookingIDCounter;
+    private static int bookingIDCounter = 0;
     private Date date;
     private Customer customer;
     private Status status;
@@ -63,4 +69,13 @@ public class Booking {
                 "\t\t\t- Status : " + status;
     }
 
+    @Override
+    public void paid() {
+        this.setStatus(Status.PAID);
+    }
+
+    @Override
+    public void cancelled() {
+        this.setStatus(Status.CANCELLED);
+    }
 }

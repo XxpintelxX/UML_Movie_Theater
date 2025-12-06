@@ -1,8 +1,10 @@
+package fr.efrei.domain;
+
 import java.util.*;
 
 public class Show {
     private int showID;
-    private static int showIDCounter;
+    private static int showIDCounter = 0;
     private Date date;
     private Time duration;
     private Time startTime;

@@ -1,6 +1,8 @@
+package fr.efrei.domain;
+
 public class Customer {
     private int customerID;
-    private static int customerIDCounter;
+    private static int customerIDCounter = 0;
     private String name;
     private String surName;
     private String email;

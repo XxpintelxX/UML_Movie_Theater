@@ -1,12 +1,16 @@
+package fr.efrei.domain;
+
 public class Hall {
     private int hallID;
+    private static int hallIDCounter = 0;
     private String hallName;
     private int nbSeats;
 
     public Hall() {}
 
     public Hall(int hallID, String hallName, int nbSeats) {
-        this.hallID = hallID;
+        hallIDCounter++;
+        this.hallID = hallIDCounter;
         this.hallName = hallName;
         this.nbSeats = nbSeats;
     }

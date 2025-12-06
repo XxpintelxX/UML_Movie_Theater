@@ -1,12 +1,14 @@
+package fr.efrei.domain;
+
+import fr.efrei.factory.BookingFactory;
+
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
 
-        // CREATING MOVIE
-//        ArrayList<Movie> listMovies = new ArrayList<Movie>();
+        // CREATING MOVIES
         Manager manager = Manager.getInstance();
-//        manager.setListMovies(listMovies);
 
         Movie movie = new Movie.MovieBuilder("Alice in Wonderland")
                 .duration(new Time(0, 48, 1))
@@ -21,9 +23,7 @@ public class Main {
                 .rating(7.6)
                 .description("Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.")
                 .build();
-
-//        listMovies.add(movie);
-//        listMovies.add(movie1);
+        
         manager.addListMovies(movie);
         manager.addListMovies(movie1);
 
@@ -51,12 +51,12 @@ public class Main {
 
         // ADDING BOOKING TO SHOW
         Customer c = new Customer("Yrieix", "de Salaberry", "yrieix@gmail.com", "0607080910", "T-REX123", 13.0);
-        Booking b = new Booking(s.getDate(), c, Status.RESERVED);
+        Booking b = BookingFactory.createReservation(c, s);
         movie.addBooking(b, s);
 
         Customer c1 = new Customer("Mattéo", "Cousinard", "matteo@gmail.com", "0710136790", "JAVAGENIUS", 4.0);
-        Booking b1 = new Booking(s.getDate(), c1, Status.PAID);
-        Booking b2 = new Booking(s1.getDate(), c1, Status.RESERVED);
+        Booking b1 = BookingFactory.createPaidBooking(c1, s);
+        Booking b2 = BookingFactory.createReservation(c1, s1);
         movie.addBooking(b1, s);
         movie1.addBooking(b2, s1);
 

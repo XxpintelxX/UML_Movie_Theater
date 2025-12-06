@@ -1,4 +1,7 @@
-import java.awt.print.Book;
+package fr.efrei.domain;
+
+import fr.efrei.factory.BookingFactory;
+
 import java.util.ArrayList;
 
 public class Manager {
@@ -80,7 +83,7 @@ public class Manager {
         for (Movie m : listMovies) {
             for (Show s : m.getListShows()) {
                 if (s.getShowID() == (showID)) {
-                    s.addBooking(new Booking(s.getDate(), customer, Status.RESERVED));
+                    s.addBooking(BookingFactory.createReservation(customer, s));
                 }
             }
         }
@@ -93,7 +96,7 @@ public class Manager {
                     if ((b.getCustomer().equals(customer)) && (b.getStatus().equals(Status.RESERVED))) {
                         if (customer.canPay(s.getPrice())) {
                             customer.paying(s.getPrice());
-                            b.setStatus(Status.PAID);
+                            b.paid();
                         }
                     }
                 }
