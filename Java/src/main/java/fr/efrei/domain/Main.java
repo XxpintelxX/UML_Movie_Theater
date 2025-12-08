@@ -23,7 +23,7 @@ public class Main {
                 .rating(7.6)
                 .description("Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.")
                 .build();
-        
+
         manager.addListMovies(movie);
         manager.addListMovies(movie1);
 
