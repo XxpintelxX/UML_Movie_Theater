@@ -37,6 +37,7 @@ public class Main {
                 .startTime(new Time(0, 30, 11))
                 .hall(new Hall("Georges Lucas", 145))
                 .listBookings(new ArrayList<Booking>())
+                .price(12)
                 .build();
 
         Show s1 = new Show.ShowBuilder()
@@ -45,6 +46,7 @@ public class Main {
                 .startTime(new Time(0, 45, 9))
                 .hall(new Hall("Steven Spielberg", 100))
                 .listBookings(new ArrayList<Booking>())
+                .price(7)
                 .build();
 
         movie.addShow(s);
@@ -87,7 +89,8 @@ public class Main {
             System.out.println("3- Enter Show as");
             System.out.println("4- Reserve Show as");
             System.out.println("5- Pay a booking");
-            System.out.println("6- Sign up\n");
+            System.out.println("6- Sign up");
+            System.out.println("7- Display balance\n");
             input = scanner.nextLine();
             switch (input) {
                 case "1":
@@ -125,10 +128,53 @@ public class Main {
                 case "6":
                     listCustomers.add(createCustomer());
                     break;
+                case "7":
+                    System.out.println("Enter your email : ");
+                    String balanceEmail = scanner.nextLine();
+                    displayCustomerBalance(balanceEmail, listCustomers);
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    public static void displayCustomerBalance(String email, ArrayList<Customer> listCustomers) {
+        boolean foundCustomer = false;
+        Customer customer = null;
+
+        // FINDING CUSTOMER WITH CORRESPONDING EMAIL
+        for (Customer c : listCustomers) {
+            if (c.getEmail().equals(email)) {
+                foundCustomer = true;
+                customer = c;
+            }
+        }
+
+        if (!foundCustomer) {
+            System.out.println("There are no such customer");
+            return;
+        }
+
+        // ASKING USER TO CONNECT
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your password (you have 3 tries) :");
+        String pwdEntered = "";
+        int i = 0;
+        pwdEntered = scanner.nextLine();
+        while ((i < 2) && !pwdEntered.equals(customer.getPassword())) {
+            System.out.println("Wrong password, try again. You still got " + (3-(i+1)) + " tries");
+            pwdEntered = scanner.nextLine();
+            i++;
+        }
+
+        // HANDLING 3 WRONG PASSWORDS
+        if (i >= 2) {
+            System.out.println("You entered a wrong password 3 times.");
+            return;
+        }
+
+        System.out.println(customer.getName() + "'s balance is : " + customer.getBalance());
     }
 
     public static Customer createCustomer() {

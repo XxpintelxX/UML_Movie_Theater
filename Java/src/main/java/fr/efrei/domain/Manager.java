@@ -1,6 +1,7 @@
 package fr.efrei.domain;
 
 import fr.efrei.factory.BookingFactory;
+import fr.efrei.repository.BookingRepository;
 
 import java.util.ArrayList;
 
@@ -69,9 +70,11 @@ public class Manager {
         for (Movie m : listMovies) {
             for (Show s : m.getListShows()) {
                 for (Booking b : s.getListBookings()) {
-                    if ((b.getCustomer().equals(customer)) && (b.getStatus().equals(Status.RESERVED))) {
+                    if ((b.getCustomer().equals(customer)) &&
+                            (b.getStatus().equals(Status.RESERVED)) &&
+                            (s.getPrice() <= customer.getBalance())) {
                         canPay = true;
-                        System.out.println("Customer can pay : " + canPay);
+                        break;
                     }
                 }
             }
@@ -91,18 +94,9 @@ public class Manager {
     }
 
     public void customerPays(Customer customer, int bookingID) {
-        for (Movie m : listMovies) {
-            for (Show s : m.getListShows()) {
-                for (Booking b : s.getListBookings()) {
-                    if ((b.getCustomer().equals(customer)) && (b.getStatus().equals(Status.RESERVED))) {
-                        if (customer.canPay(s.getPrice())) {
-                            customer.paying(s.getPrice());
-                            b.setStatus(Status.PAID);
-                        }
-                    }
-                }
-            }
-        }
+        BookingRepository brep = BookingRepository.getInstance();
+        Booking b = brep.findById(bookingID);
+        b.setStatus(Status.PAID);
     }
 }
 
