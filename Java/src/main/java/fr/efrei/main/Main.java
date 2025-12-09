@@ -1,5 +1,7 @@
-package fr.efrei.domain;
+package fr.efrei.main;
 
+import fr.efrei.domain.*;
+import fr.efrei.domain.Date;
 import fr.efrei.factory.BookingFactory;
 
 import java.util.*;
@@ -30,18 +32,18 @@ public class Main {
 
         // ADDING SHOW TO MOVIE
         Show s = new Show.ShowBuilder()
-                .date(new Date(2025, 11, 30))
+                .date(new fr.efrei.domain.Date(2025, 11, 30))
                 .duration(movie.getDuration())
                 .startTime(new Time(0, 30, 11))
-                .hall(new Hall(3, "Georges Lucas", 145))
+                .hall(new Hall("Georges Lucas", 145))
                 .listBookings(new ArrayList<Booking>())
                 .build();
 
         Show s1 = new Show.ShowBuilder()
-                .date(new Date(2025, 12, 5))
+                .date(new fr.efrei.domain.Date(2025, 12, 5))
                 .duration(movie1.getDuration())
                 .startTime(new Time(0, 45, 9))
-                .hall(new Hall(1, "Steven Spielberg", 100))
+                .hall(new Hall("Steven Spielberg", 100))
                 .listBookings(new ArrayList<Booking>())
                 .build();
 
@@ -70,6 +72,11 @@ public class Main {
         displayMovies(manager.getListMovies());
         System.out.println();
 
+
+
+
+
+
         // LOOP FOR CONSOLE INTERFACE
         String input = "";
         Scanner scanner = new Scanner(System.in);
@@ -79,7 +86,8 @@ public class Main {
             System.out.println("2- Add Movie");
             System.out.println("3- Enter Show as");
             System.out.println("4- Reserve Show as");
-            System.out.println("5- Pay a booking\n");
+            System.out.println("5- Pay a booking");
+            System.out.println("6- Sign up\n");
             input = scanner.nextLine();
             switch (input) {
                 case "1":
@@ -103,16 +111,58 @@ public class Main {
                     System.out.println("Enter your email :");
                     String reservingEmail = scanner.nextLine();
                     manager.setListMovies(addBooking(manager.getListMovies(), reservingEmail, listCustomers));
+                    break;
                 case "5":
                     System.out.println("Enter your email : ");
                     String payingEmail = scanner.nextLine();
                     if (pay(payingEmail, listCustomers)) {
-
+                        System.out.println("You paid your booking.");
                     }
+                    else {
+                        System.out.println("You didn't pay a booking");
+                    }
+                    break;
+                case "6":
+                    listCustomers.add(createCustomer());
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    public static Customer createCustomer() {
+        String name;
+        String surName;
+        String email;
+        String phone;
+        String password;
+        double balance;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your name :");
+        name = scanner.nextLine();
+        System.out.println("Enter you surname : ");
+        surName = scanner.nextLine();
+        System.out.println("Enter your email : ");
+        email = scanner.nextLine();
+        System.out.println("Enter your phone number : ");
+        phone = scanner.nextLine();
+        System.out.println("Choose a password : ");
+        password = scanner.nextLine();
+        Customer customer = new Customer(name, surName, email, phone, password, 0.0);
+        System.out.println("Do you want to deposit ? (y/n)");
+        if (scanner.nextLine().equals("y")) {
+             deposit(customer);
+        }
+
+        return customer;
+    }
+
+    public static void deposit(Customer customer) {
+        System.out.println("How much do you want to deposit ?");
+        Scanner scanner = new Scanner(System.in);
+        double deposit = scanner.nextDouble();
+        customer.deposit(deposit);
     }
 
     public static boolean pay(String email, ArrayList<Customer> listCustomers) {
@@ -169,6 +219,7 @@ public class Main {
         // CHECKING IF CUSTOMER CAN PAY SHOW
         if (manager.checkCustomerCanPay(customer, input)) {
             manager.customerPays(customer, input);
+            payed = true;
         }
 
         return payed;
@@ -439,15 +490,12 @@ public class Main {
             int hallID;
             String hallName;
             int nbSeats;
-            System.out.println("Enter the hall ID : ");
-            hallID = s.nextInt();
-            s.nextLine();
             System.out.println("Enter hall Name : ");
             hallName = s.nextLine();
             System.out.println("Enter number of seats : ");
             nbSeats = s.nextInt();
             s.nextLine();
-            sb.hall(new Hall(hallID, hallName, nbSeats));
+            sb.hall(new Hall(hallName, nbSeats));
         }
 
         Show show = sb.build();

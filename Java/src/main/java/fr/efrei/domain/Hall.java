@@ -8,7 +8,7 @@ public class Hall {
 
     public Hall() {}
 
-    public Hall(int hallID, String hallName, int nbSeats) {
+    public Hall(String hallName, int nbSeats) {
         hallIDCounter++;
         this.hallID = hallIDCounter;
         this.hallName = hallName;

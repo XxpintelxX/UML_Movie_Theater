@@ -1,10 +1,10 @@
 package fr.efrei.domain;
 
+import fr.efrei.factory.BookingFactory;
 import fr.efrei.repository.BookingRepository;
+import fr.efrei.repository.IBookingRepository;
 
-import java.awt.print.Book;
-
-public class Booking implements BookingRepository {
+public class Booking {
     private int bookingID;
     private static int bookingIDCounter = 0;
     private Date date;
@@ -19,6 +19,8 @@ public class Booking implements BookingRepository {
         this.date = date;
         this.customer = customer;
         this.status = status;
+        BookingRepository brep = BookingRepository.getInstance();
+        brep.save(this);
     }
 
     public int getBookingID() {
@@ -69,12 +71,6 @@ public class Booking implements BookingRepository {
                 "\t\t\t- Status : " + status;
     }
 
-    @Override
-    public void paid() {
-        this.setStatus(Status.PAID);
-    }
-
-    @Override
     public void cancelled() {
         this.setStatus(Status.CANCELLED);
     }

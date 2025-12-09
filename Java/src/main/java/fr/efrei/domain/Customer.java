@@ -79,6 +79,10 @@ public class Customer {
         this.balance = balance;
     }
 
+    public void deposit(double deposit) {
+        balance += deposit;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +

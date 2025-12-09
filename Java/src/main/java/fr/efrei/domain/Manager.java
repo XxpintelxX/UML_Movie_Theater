@@ -71,6 +71,7 @@ public class Manager {
                 for (Booking b : s.getListBookings()) {
                     if ((b.getCustomer().equals(customer)) && (b.getStatus().equals(Status.RESERVED))) {
                         canPay = true;
+                        System.out.println("Customer can pay : " + canPay);
                     }
                 }
             }
@@ -96,7 +97,7 @@ public class Manager {
                     if ((b.getCustomer().equals(customer)) && (b.getStatus().equals(Status.RESERVED))) {
                         if (customer.canPay(s.getPrice())) {
                             customer.paying(s.getPrice());
-                            b.paid();
+                            b.setStatus(Status.PAID);
                         }
                     }
                 }
